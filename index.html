@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Absensi API Request</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        :root {
+            --baby-1: #eaf8ff;
+            --baby-2: #d5f0ff;
+            --baby-3: #bde4ff;
+            --baby-4: #7dc7ff;
+            --baby-5: #3d86c6;
+            --text: #1c3b5a;
+            --card: rgba(255, 255, 255, 0.92);
+            --line: #cceaff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, #ffffff 0%, #f4fbff 25%, #dff3ff 60%, #cbe9ff 100%);
+            color: var(--text);
+            padding: 24px;
+        }
+
+        .page-shell {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #f7fdff, #d8efff);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 22px 24px;
+            box-shadow: 0 10px 28px rgba(85, 150, 210, 0.18);
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            margin: 0 0 8px;
+            color: #195a8b;
+            font-size: 30px;
+        }
+
+        .hero .subtitle {
+            margin: 0;
+            color: #4f7fa8;
+            font-size: 14px;
+        }
+
+        .brand-badge {
+            display: inline-block;
+            background: #ffffff;
+            color: #0f6fb6;
+            border: 1px solid #bfe4ff;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin-top: 40px;
+            border-left: 5px solid var(--baby-5);
+            padding-left: 12px;
+            font-size: 22px;
+            color: #1c5584;
+        }
+
+        .form-box {
+            background: var(--card);
+            padding: 22px;
+            margin-top: 18px;
+            border-radius: 16px;
+            box-shadow: 0 8px 22px rgba(109, 173, 226, 0.18);
+            border: 1px solid #d8efff;
+            backdrop-filter: blur(4px);
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            color: #24567f;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            margin-top: 5px;
+            border-radius: 10px;
+            border: 1px solid #b7dcf6;
+            background: #fbfeff;
+            color: #1c3b5a;
+            transition: 0.2s ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--baby-4);
+            box-shadow: 0 0 0 3px rgba(125, 199, 255, 0.25);
+        }
+
+        button {
+            background: linear-gradient(135deg, #78c4ff, #2f89d7);
+            color: white;
+            padding: 11px 18px;
+            border: none;
+            border-radius: 10px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 8px 16px rgba(47, 137, 215, 0.25);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #64b8fb, #1f73b7);
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .flex-row>div {
+            flex: 1
+        }
+
+        .result {
+            background: #112437;
+            color: #8cf0a2;
+            padding: 12px;
+            margin-top: 12px;
+            font-family: monospace;
+            height: 140px;
+            overflow: auto;
+            border-radius: 12px;
+            border: 1px solid #1b3d63;
+        }
+
+        textarea {
+            min-height: 92px;
+            resize: vertical;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-shell">
+        <div class="hero">
+            <div class="brand-badge">Digital Native Developer</div>
+            <h1>Form Absensi ATEI API Request</h1>
+            <h1>Hanya kita berdua yang bisa ❤︎</h1>
+        </div>
+
+        <table width="100%">
+            <tr>
+                <td width="50%">
+                    Kec.Dustim
+                </td>
+                <td>
+                    <a link href="atei_kecamatan dusun timur.html">Klik untuk Absensi Kec.Dusun Timur</a>
+                </td>
+            </tr>
+            <tr>
+                <td width="50%">
+                    Kel.Tamiang Layang
+                </td>
+                <td>
+                    <a link href="atei_kelurahan tamiang layang.html">Klik untuk Absensi Kel.Tamiang Layang</a>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+
+</body>
+
+</html>
