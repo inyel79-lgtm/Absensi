@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Absensi API Request</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin-top: 40px;
+            border-left: 4px solid #007bff;
+            padding-left: 10px;
+            font-size: 20px;
+        }
+
+        .form-box {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .06);
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .flex-row>div {
+            flex: 1
+        }
+
+        .result {
+            background: #111;
+            color: #0f0;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: monospace;
+            height: 140px;
+            overflow: auto;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Form Absensi ATEI BARTIM Request</h1>
+
+    <table width="100%">
+        <tr>
+            <td width="70%">
+                <h3 style="color: blue;">Developer</h3></a>
+            </td>
+            <td>
+                <!-- <p>ID Pegawai Terpilih: <b id="idUser">-</b></p> -->
+                <!-- Rekap SKPD <a href="https://presensi.baritotimurkab.go.id/view_absen_tpp_pdf/948/2/2026">Lihat Rekap</a> -->
+            </td>
+        </tr>
+    </table>
+    <h2>Rekap Absensi</h2>
+    <form id="rekapForm">
+        <div style="display:flex; gap:15px;">
+            <!-- Pegawai -->
+            <div>
+                <label>Pegawai</label><br>
+                <select name="pegawai" class="userSelect" required></select>
+            </div>
+
+            <!-- Bulan -->
+            <div>
+                <label>Bulan</label><br>
+                <select name="bulan" class="bulan" required>
+                    <script>
+                        const bulanList = [
+                            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                        ];
+                        document.write(
+                            bulanList.map((b, i) => `<option value="${i + 1}">${b}</option>`).join('')
+                        );
+                    </script>
+                </select>
+            </div>
+
+            <!-- Tahun -->
+            <div>
+                <label>Tahun</label><br>
+                <select name="tahun" class="tahun" required>
+                    <script>
+                        const tahunSekarang = new Date().getFullYear();
+                        for (let i = tahunSekarang - 5; i <= tahunSekarang + 5; i++) {
+                            document.write(`<option value="${i}" ${i === tahunSekarang ? 'selected' : ''}>${i}</option>`);
+                        }
+                    </script>
+                </select>
+            </div>
+            <div>
+                <button type="submit" style="margin-top:15px;">Cek Rekap</button>
+            </div>
+        </div>
+
+
+    </form>
+
+    <!-- ============================= IP CONFIG ============================= -->
+    <h2>Ip Config</h2>
+    <div class="form-box">
+        <form id="ipConfigForm">
+            <div class="flex-row">
+                <div>
+                    <label>Unit ID</label>
+                    <select name="id_unit" id="id_unit" class="" required>
+                        <option value="49">Puskesmas Dayu</option>
+                    </select>
+
+                </div>
+                <div>
+                    <label>ip_unit</label>
+                    <input type="text" name="ip_unit" required>
+                </div>
+            </div>
+
+            <button type="submit">Simpan</button>
+        </form>
+        <pre id="ipConfigResult" class="result"></pre>
+    </div>
+
+    <!-- ============================= CHECK-IN ============================= -->
+    <h2>Check-In</h2>
+    <div class="form-box">
+        <form id="checkinForm">
+            <div class="flex-row">
+                <div>
+                    <label>Pegawai</label>
+                    <select name="id" class="userSelect" required></select>
+                </div>
+                <div>
+                    <label>Tanggal</label>
+                    <input type="date" name="tgl_in" required>
+                </div>
+            </div>
+            <div>
+                <label>Jam Masuk</label>
+                <input type="text" id="jam_in" name="jam_in" class="jam" placeholder="HH:MM:SS" maxlength="8" required>
+                <button type="button" id="btnRandomJamIn">Random Jam</button>
+            </div>
+            <button type="submit">Kirim Check-In</button>
+        </form>
+        <pre id="checkinResult" class="result"></pre>
+    </div>
+
+    <!-- ============================= CHECK-OUT ============================= -->
+    <h2>Check-Out</h2>
+    <div class="form-box">
+        <form id="checkoutForm">
+            <div class="flex-row">
+                <div>
+                    <label>Pegawai</label>
+                    <select name="id" class="userSelect" required></select>
+                </div>
+                <div>
+                    <label>Tanggal</label>
+                    <input type="date" name="tgl_out" required>
+                </div>
+            </div>
+            <div>
+                <label>Jam Keluar</label>
+                <input type="text" id="jam_out" name="jam_out" class="jam" placeholder="HH:MM:SS" maxlength="8"
+                    required>
+                <button type="button" id="btnRandomJamOut">Random Jam</button>
+
+            </div>
+            <button type="submit">Kirim Check-Out</button>
+        </form>
+        <pre id="checkoutResult" class="result"></pre>
+    </div>
+
+    <!-- ===================== DINAS DALAM DAERAH ===================== -->
+    <h2>Dinas Dalam Daerah</h2>
+    <div class="form-box">
+        <form id="dalamForm">
+            <div class="flex-row">
+                <div>
+                    <label>Pegawai</label>
+                    <select name="id" class="userSelect" required></select>
+                </div>
+                <div>
+                    <label>No Surat</label>
+                    <input type="text" name="no_surat" required>
+                </div>
+            </div>
+
+            <label>Keterangan</label>
+            <textarea name="ket" required></textarea>
+
+            <div class="flex-row">
+                <div>
+                    <label>Tanggal Mulai</label>
+                    <input type="date" name="date_start" required>
+                </div>
+                <div>
+                    <label>Tanggal Selesai</label>
+                    <input type="date" name="date_end" required>
+                </div>
+            </div>
+
+            <button type="submit">Kirim Dalam Daerah</button>
+        </form>
+        <pre id="dalamResult" class="result"></pre>
+    </div>
+
+    <!-- ===================== DINAS LUAR DAERAH ===================== -->
+    <h2>Dinas Luar Daerah</h2>
+    <div class="form-box">
+        <form id="luarForm">
+            <div class="flex-row">
+                <div>
+                    <label>Pegawai</label>
+                    <select name="id" class="userSelect" required></select>
+                </div>
+                <div>
+                    <label>No Surat</label>
+                    <input type="text" name="no_surat" required>
+                </div>
+            </div>
+
+            <label>Keterangan</label>
+            <textarea name="ket" required></textarea>
+
+            <div class="flex-row">
+                <div>
+                    <label>Tanggal Mulai</label>
+                    <input type="date" name="date_start" required>
+                </div>
+                <div>
+                    <label>Tanggal Selesai</label>
+                    <input type="date" name="date_end" required>
+                </div>
+            </div>
+
+            <button type="submit">Kirim Luar Daerah</button>
+        </form>
+        <pre id="luarResult" class="result"></pre>
+    </div>
+
+    <!-- ===================== TUGAS DINAS ===================== -->
+    <h2>Tugas Dinas</h2>
+    <div class="form-box">
+        <form id="tugasForm">
+
+            <div class="flex-row">
+                <div>
+                    <label>Pegawai</label>
+                    <select name="id" class="userSelect" required></select>
+                </div>
+                <div>
+                    <label>No Surat</label>
+                    <input type="text" name="no_surat" required>
+                </div>
+            </div>
+
+            <label>Keterangan</label>
+            <textarea name="ket" required></textarea>
+
+            <div class="flex-row">
+                <div>
+                    <label>Tanggal</label>
+                    <input type="date" name="date" required>
+                </div>
+                <div>
+                    <label>Part Day</label>
+                    <input type="number" name="part_day" required placeholder="contoh: 3">
+                </div>
+            </div>
+
+            <button type="submit">Kirim Tugas Dinas</button>
+        </form>
+        <pre id="tugasResult" class="result"></pre>
+    </div>
+
+    <!-- ===================== IZIN SEHARI ===================== -->
+    <h2>Izin Sehari</h2>
+    <div class="form-box">
+        <form id="izinSehariForm">
+            <div class="flex-row">
+                <div>
+                    <label>Pegawai</label>
+                    <select name="id" class="userSelect" required></select>
+                </div>
+                <div>
+                    <label>No Surat</label>
+                    <input type="text" name="no_surat" required>
+                </div>
+            </div>
+
+            <label>Keterangan</label>
+            <textarea name="ket" required></textarea>
+
+            <div class="flex-row">
+                <div>
+                    <label>Tanggal</label>
+                    <input type="date" name="date" required>
+                </div>
+                <div>
+                    <label>Jenis Izin</label>
+                    <select name="jns" required>
+                        <option value="">-- Pilih Jenis Izin --</option>
+                        <option value="5">Izin Alasan Tertentu</option>
+                        <option value="6">Izin Sakit</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex-row">
+                <div>
+                    <label>Part Day</label>
+                    <select name="part_day" required>
+                        <option value="">-- Pilih --</option>
+                        <option value="1">Check In Saja</option>
+                        <option value="2">Check Out Saja</option>
+                        <option value="3">Full Day</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit">Kirim Izin Sehari</button>
+        </form>
+        <pre id="izinSehariResult" class="result"></pre>
+    </div>
+
+    <!-- ===================== IZIN LEBIH DARI SEHARI ===================== -->
+    <h2>Izin Lebih dari Sehari</h2>
+    <div class="form-box">
+        <form id="izinMoreDayForm">
+            <div class="flex-row">
+                <div>
+                    <label>Pegawai</label>
+                    <select name="id" class="userSelect" required></select>
+                </div>
+                <div>
+                    <label>No Surat</label>
+                    <input type="text" name="no_surat" required>
+                </div>
+            </div>
+
+            <label>Keterangan</label>
+            <textarea name="ket" required></textarea>
+
+            <div class="flex-row">
+                <div>
+                    <label>Jenis Izin</label>
+                    <select name="jns" required>
+                        <option value="">-- Pilih Jenis Izin --</option>
+                        <option value="5">Izin Alasan Tertentu</option>
+                        <option value="6">Izin Sakit</option>
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div class="flex-row">
+                <div>
+                    <label>Tanggal Mulai</label>
+                    <input type="date" name="date_start" required>
+                </div>
+                <div>
+                    <label>Tanggal Selesai</label>
+                    <input type="date" name="date_end" required>
+                </div>
+            </div>
+
+            <button type="submit">Kirim Izin Lebih dari Sehari</button>
+        </form>
+        <pre id="izinMoreDayResult" class="result"></pre>
+    </div>
+
+    <script>
+        // Generate waktu random antara 07:00:00 - 07:59:59
+        function randomJamIn() {
+            // Generate random minutes between 30-59
+            const men = String(Math.floor(Math.random() * 30) + 30).padStart(2, '0');
+            const det = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+
+            return `07:${men}:${det}`;
+        }
+
+        function randomJamOut() {
+            // Menit antara 01-20, detik antara 00-59
+            const m = String(Math.floor(Math.random() * 20) + 1).padStart(2, '0');
+            const s = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+            return `16:${m}:${s}`;
+        }
+
+        // Klik tombol → isi input dengan random
+        $("#btnRandomJamIn").on("click", function () {
+            $("#jam_in").val(randomJamIn()).trigger("input");
+        });
+
+        $("#btnRandomJamOut").on("click", function () {
+            $("#jam_out").val(randomJamOut()).trigger("input");
+        });
+
+        function maskTime(input) {
+            let v = input.value.replace(/\D/g, '').slice(0, 6);
+            let h = v.slice(0, 2);
+            let m = v.slice(2, 4);
+            let s = v.slice(4, 6);
+
+            if (h.length >= 1 && parseInt(h) > 23) h = "23";
+            if (m.length >= 1 && parseInt(m) > 59) m = "59";
+            if (s.length >= 1 && parseInt(s) > 59) s = "59";
+
+            if (v.length >= 5) input.value = `${h}:${m}:${s}`;
+            else if (v.length >= 3) input.value = `${h}:${m}`;
+            else if (v.length >= 1) input.value = h;
+        }
+        $(document).on("input", ".jam", function () {
+            maskTime(this);
+        });
+
+        document.getElementById('rekapForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const pegawai = this.querySelector('[name="pegawai"]').value;
+            const bulan = this.querySelector('[name="bulan"]').value;
+            const tahun = this.querySelector('[name="tahun"]').value;
+
+            // Arahkan ke url target blank
+            window.open(`https://presensi.baritotimurkab.go.id/view_absen_tpp_pdf/${pegawai}/${bulan}/${tahun}`, '_blank');
+        });
+
+        // ========== SET GLOBAL HEADER AUTH ========== //
+        $.ajaxSetup({
+            headers: {
+                "Authorization": "oauth__GiNm6B7dUrvCsstT"
+            }
+        });
+
+        // ========= Auto Load Data User =========
+        function loadUser() {
+            id = $("#id_unit").val();
+            $.get(`https://api-absen.baritotimurkab.go.id/public/api/dn/userunit/${id}`, function (res) {
+                let opt = `<option value="">-- pilih pegawai --</option>`;
+                (res.data || res).forEach(u => {
+                    opt += `<option value="${u.id}">${u.name}- ${u.id}</option>`;
+                });
+                $(".userSelect").html(opt);
+
+
+            });
+        }
+
+
+        // ========= Reusable Request Handler =========
+        function sendForm(formId, url, resultBox) {
+            $(formId).on("submit", function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: url,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(Object.fromEntries(new FormData(this))),
+                    success: (res) => {
+                        $(resultBox).text(JSON.stringify(res, null, 2));
+                        alert(res.message ? "✔ " + res.message : "✔ Berhasil dikirim!");
+                    },
+                    error: (err) => {
+                        $(resultBox).text("Error:\n" + JSON.stringify(err.responseJSON || err, null, 2));
+                        alert("❌ Gagal mengirim data!");
+                    }
+                });
+            });
+        }
+
+        // init
+        loadUser();
+        sendForm("#ipConfigForm", "https://api-absen.baritotimurkab.go.id/public/api/dn/ip-config", "#ipConfigResult");
+        sendForm("#checkinForm", "https://api-absen.baritotimurkab.go.id/public/api/dn/check-in", "#checkinResult");
+        sendForm("#checkoutForm", "https://api-absen.baritotimurkab.go.id/public/api/dn/check-out", "#checkoutResult");
+        sendForm("#dalamForm", "https://api-absen.baritotimurkab.go.id/public/api/dn/dalam_daerah", "#dalamResult");
+        sendForm("#luarForm", "https://api-absen.baritotimurkab.go.id/public/api/dn/luar_daerah", "#luarResult");
+        sendForm("#tugasForm", "https://api-absen.baritotimurkab.go.id/public/api/dn/tugas_dinas", "#tugasResult");
+        sendForm("#izinSehariForm", "https://api-absen.baritotimurkab.go.id/public/api/dn/izin_sehari", "#izinSehariResult");
+        sendForm("#izinMoreDayForm", "https://api-absen.baritotimurkab.go.id/public/api/dn/izin_more_day", "#izinMoreDayResult");
+
+    </script>
+    <script>
+        // Ambil IP publik, masking, dan isi ke input ip_unit
+        fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(data => {
+                // Masking: ganti 3 digit terakhir dengan *
+                const ip = data.ip;
+                const masked = ip.replace(/^(\d+\.\d+\.\d+\.)(\d+)$/, '$1*');
+                document.querySelector('input[name="ip_unit"]').value = masked;
+            });
+    </script>
+
+
+</body>
+
+</html>
